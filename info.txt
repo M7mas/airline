@@ -25,7 +25,7 @@ for the next times: 'git'
 
     git add --all
     git commit -m "something useful"
-    git push -u origin main
+    git push origin main
 ###########################################
 
 
