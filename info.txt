@@ -27,3 +27,19 @@ for the next times: 'git'
     git commit -m "something useful"
     git push -u origin main
 ###########################################
+
+
+
+
+need to setup an .env directory with:
+    DATABASE_HOSTNAME=
+    DATABASE_PORT=
+    DATABASE_PASSWORD=
+    DATABASE_USERNAME=
+    DATABASE_NAME=
+    SECRET_KEY=
+    ALGORITHM=
+    ACCESS_TOKEN_EXPIRE_MINUTES=
+just to make the API works
+
+
