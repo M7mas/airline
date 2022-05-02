@@ -18,4 +18,12 @@ git add --all | add the file into git
 git commit -m "message" | to submit the changese 
 git branch -M main | to set the branch to main
 git push -u origin main | to push the changese to github
- 
+
+
+for the next times: 'git'
+    just:
+
+    git add --all
+    git commit -m "something useful"
+    git push -u origin main
+###########################################
