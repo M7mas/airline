@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int
     
     class Config:
-        env_file = "P:\Development\API\AirLine\.env"
+        env_file = ".env"
 
 settings = Settings()
 

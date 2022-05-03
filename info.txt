@@ -2,15 +2,18 @@ for pip:
 pip freeze > requirements.txt | to generate a requiment file
 pip install -r reqirements.txt | to install each reqs
 
+
 for alembic:
 alembic revision -m "massesge" | to create a python file to make an upgrade/downgrade
 alembic revision --autogenerate -m "massesge" | to automaticlly create a python file to make an upgrade/downgrade
 alembic upgrade head | to move to the latest version
 alembic downgrade head | to ditch the modification for the last version
 
+
 for python:
 python -m venv venv | to generate a vertual enviroments
 uvicorn app.main:app --reload --port 8888 | to start the API
+
 
 for git:
 git init | to make an empty git repo

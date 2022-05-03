@@ -75,4 +75,6 @@ class Testing(BaseModel):
 #     id: int = Field(alias="identifier")
 # and for the Config Class -> must have :
 # "allow_population_by_field_name = True" # This just for the usage of alias.
+# also, for the response must have a Config class
+# with orm_mode = True
 
