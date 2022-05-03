@@ -31,7 +31,23 @@ app.include_router(auth.router)
 
 @app.get("/")
 def main():
-    return {"message": "This API for Air Line Application."}
+    
+    # + to add every route for this function
+    # as you telling anyone what to do.
+    
+    #exp. ->
+    # {"sql": [{"/":"to get a post"}, {"/{id}":"to get a spicific post"}]}
+    # somthing like that or to just gives the route to the 
+    # documents.
+    # /redoc + /docs
+    
+    return {"message": "This API for Air Line Application.",
+            "documentation": [
+                {"Swagger UI": "/docs"},
+                {"ReDoc": "/redoc"},
+                            ],
+            "version": "v1.0.0",
+            }
 
 
 
