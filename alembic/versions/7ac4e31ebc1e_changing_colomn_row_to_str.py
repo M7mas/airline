@@ -1,8 +1,8 @@
-"""changing user_id to owner_id
+"""changing colomn/row to str
 
-Revision ID: 741a6fed40d4
-Revises: e847986c4d79
-Create Date: 2022-05-02 01:54:37.794571
+Revision ID: 7ac4e31ebc1e
+Revises: 409ae5692637
+Create Date: 2022-05-07 16:12:58.351826
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '741a6fed40d4'
-down_revision = 'e847986c4d79'
+revision = '7ac4e31ebc1e'
+down_revision = '409ae5692637'
 branch_labels = None
 depends_on = None
 

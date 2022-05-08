@@ -1,19 +1,25 @@
 # Command to run the API: uvicorn main:app --port 8888 --reload
 # This API for AirLine Project
 
-
-from http.client import HTTPException
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from app import models, schemas
-from app.routers import Temp, user, auth
 from app.database import engine, get_db
 from starlette.status import *
 from typing import List
+from app.routers import auth, blacklist, card, classes, fine, flight, maintenance, order, plane, price, reports, seat, state, ticket, type, user, waitlist, weight
 
 
-app = FastAPI()
+app = FastAPI(
+    title= "Air Line API",
+    version= "1.0.0",
+    description= "API - Project ICS-324 - Air Line System",
+    redoc_url="/documentation",
+    docs_url=None,
+    openapi_url="/openAPI",
+)
+
 
 origins = ["*"]
 
@@ -25,28 +31,32 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(Temp.router)
-app.include_router(user.router)
 app.include_router(auth.router)
+app.include_router(blacklist.router)
+app.include_router(card.router)
+app.include_router(classes.router)
+app.include_router(fine.router)
+app.include_router(flight.router)
+app.include_router(maintenance.router)
+app.include_router(order.router)
+app.include_router(plane.router)
+app.include_router(price.router)
+app.include_router(reports.router)
+app.include_router(seat.router)
+app.include_router(state.router)
+app.include_router(ticket.router)
+app.include_router(type.router)
+app.include_router(user.router)
+app.include_router(waitlist.router)
+app.include_router(weight.router)
+
 
 @app.get("/")
 def main():
-    
-    # + to add every route for this function
-    # as you telling anyone what to do.
-    
-    #exp. ->
-    # {"sql": [{"/":"to get a post"}, {"/{id}":"to get a spicific post"}]}
-    # somthing like that or to just gives the route to the 
-    # documents.
-    # /redoc + /docs
-    
-    return {"message": "This API for Air Line Application.",
-            "documentation": [
-                {"Swagger UI": "/docs"},
-                {"ReDoc": "/redoc"},
-                            ],
-            "version": "v1.0.0",
+    return {
+            "Information": "This API for Air Line Application.",
+            "documentation": "/documentation",
+            "OpenAPI schema ": "/openAPI",
             }
 
 

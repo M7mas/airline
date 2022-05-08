@@ -18,23 +18,7 @@ depends_on = None
 
 
 def upgrade():
-    op.create_table(
-        'Temp',
-        sa.Column('id', sa.Integer, primary_key=True, nullable=False),
-        sa.Column('title', sa.String, nullable=False),
-        sa.Column('content', sa.String, nullable=False),
-        sa.Column('private', sa.Boolean, server_default='False'),
-        sa.Column('created_at', sa.DateTime(timezone=True), nullable=False, server_default=text('current_timestamp(0)'))
-    )
-    
-    # id = Column(Integer, primary_key=True, nullable=False)
-    # title = Column(String, nullable=False)
-    # content = Column(String, nullable=False)
-    # private = Column(Boolean, server_default='False')
-    # created_at = Column(DateTime(timezone=True), nullable=False, server_default=text('current_timestamp(0)'))
-
-
+    pass
 
 def downgrade():
-    op.drop_table('Temp')
-    
+    pass    

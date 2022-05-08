@@ -18,18 +18,9 @@ depends_on = None
 
 
 def upgrade():
-    op.add_column(
-        'Temp',
-        sa.Column('owner_id', sa.Integer, nullable=False)
-    )
-    op.create_foreign_key(
-        'Temp_user_fk',
-        source_table='Temp', referent_table="users",
-        local_cols=['owner_id'], remote_cols=['id'],
-        ondelete="CASCADE")
+    pass
     
 
 
 def downgrade():
-    op.drop_column('Temp', 'owner_id')
-    op.drop_constraint('Temp_user_fk', table_name='Temp')
+    pass

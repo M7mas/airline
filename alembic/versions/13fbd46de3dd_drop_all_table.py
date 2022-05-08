@@ -1,17 +1,17 @@
-"""changing user_id to owner_id
+"""drop all table
 
-Revision ID: 741a6fed40d4
-Revises: e847986c4d79
-Create Date: 2022-05-02 01:54:37.794571
+Revision ID: 13fbd46de3dd
+Revises: 62373f8a677f
+Create Date: 2022-05-05 07:43:39.841509
 
 """
 from alembic import op
 import sqlalchemy as sa
-
+from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '741a6fed40d4'
-down_revision = 'e847986c4d79'
+revision = '13fbd46de3dd'
+down_revision = '62373f8a677f'
 branch_labels = None
 depends_on = None
 

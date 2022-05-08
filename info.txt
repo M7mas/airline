@@ -56,3 +56,10 @@ Docs URLs¶
     ReDoc: served at /redoc.
         You can set its URL with the parameter redoc_url.
         You can disable it by setting redoc_url=None.
+also,
+
+    app = FastAPI(docs_url="/documentation", redoc_url=None)
+    to disable one of the documentation tool
+    
+
+
