@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     
     class Config:
         env_file = ".env"
+        # env_file = "/home/x/.env"
 
 settings = Settings()
 
