@@ -62,4 +62,17 @@ also,
     to disable one of the documentation tool
     
 
+first on remote machine:
+    git clone "this/repo"
 
+
+for git pull:
+    if error: "
+error: The following untracked working tree files would be overwritten by merge:
+    "
+
+    do:
+
+    git add *
+    git stash
+    git pull
