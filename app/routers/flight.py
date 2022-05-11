@@ -55,19 +55,30 @@ def create_flight(flight: schemas.FlightREQ, db: Session = Depends(get_db), curr
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
 
 @router.get("/", status_code=HTTP_200_OK, response_model=List[schemas.FlightRES])
-def get_flight(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def get_flight(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user), uFrom: Optional[str] = "", uTo: Optional[str] = ""):
     
-    flag = False
-    cu = current_user.role
-    if cu == "admin" or cu == "root":
-        flag = True
+    flag = True
     
     if flag:
         
-        flight = db.query(models.Flight).all()
+        flight = db.query(models.Flight).filter(models.Flight.source_city.contains(uFrom)).filter(models.Flight.source_city.contains(uTo)).all()
         if not flight:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no flight registed.")
         
+        
+        return flight
+    raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
+
+@router.get("/{id}", status_code=HTTP_200_OK, response_model=List[schemas.FlightRES])
+def get_flight(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+    
+    flag = True
+    
+    if flag:
+        
+        flight = db.query(models.Flight).filter(models.Flight.id == id).first()
+        if not flight:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no flight with id {id} registed.")
         
         return flight
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)

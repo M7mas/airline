@@ -51,6 +51,13 @@ def create_order(order: schemas.OrderREQ, db: Session = Depends(get_db), current
         expdate = date.today()
         order.expiredate = expdate + timedelta(days=90)
         
+        verify_ticket = db.query(models.Ticket).filter(models.Ticket.id == order.ticket_id).first() # is empty
+        class_empty = db.query(models.State).filter(models.State.classes == "Empty").first()
+        class_cancenled = db.query(models.State).filter(models.State.classes == "Canceled").first()
+        
+        if not ((verify_ticket.state_id == class_empty.id) or (verify_ticket.class_id == class_cancenled.id)):
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"The Seat is reserved.")
+        
         db.add(order)
         db.commit()
         db.refresh(order)
@@ -79,6 +86,31 @@ def get_order(db: Session = Depends(get_db), current_user: int = Depends(oauth2.
         if not order:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no order registed.")
         return order
+
+@router.get("/{id}", status_code=HTTP_200_OK, response_model=List[schemas.OrderRES])
+def get_order(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+    
+    flag = False
+    cu = current_user.role
+    if cu == "admin" or cu == "root":
+        flag = True
+    
+    if flag:
+        
+        
+        order = db.query(models.Order).filter(models.Order.id == id).first()
+        if not order:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no order registed.")
+        
+        
+        return order
+    else:
+        order = db.query(models.Order).filter(models.Order.user_id == current_user.id).filter(models.Order.id == id).first()
+        if not order:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no order registed.")
+        return order
+
+
 
 @router.put("/{id}", status_code=HTTP_202_ACCEPTED, response_model=schemas.OrderRES)
 def update_order(id: int, order: schemas.OrderUpdateREQ, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
@@ -112,7 +144,7 @@ def update_order(id: int, order: schemas.OrderUpdateREQ, db: Session = Depends(g
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
 
 @router.delete("/{id}", status_code=HTTP_204_NO_CONTENT)
-def delete_order(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def delete_order(id: int, delete: Optional[schemas.OrderDeleteREQ], db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     
     flag = False
     cu = current_user.role
@@ -130,9 +162,51 @@ def delete_order(id: int, db: Session = Depends(get_db), current_user: int = Dep
         
         order_id.delete(synchronize_session=False)
         db.commit()
+        
+        class_cancenled = db.query(models.State).filter(models.State.classes == "Canceled").first()
+        
+        if not class_cancenled:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"The class with Cancel does not exists.")
+        
+        
+        ticket_id = db.query(models.Ticket).filter(models.Ticket.id == id).filter(models.Ticket.state_id == class_cancenled.id)
+        tID = order_id.first()
+        if not oID:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"Ticket with id {tID.id} is not registed.")
+        
+        delete.class_id = class_cancenled.id
+        ticket_id.update(delete.dict(), synchronize_session=False)
+        db.commit()
+        
         return
-    
-    raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
+    else:
+        
+        order_id = db.query(models.Order).filter(models.Order.id == id).filter(models.Order.user_id == cu.id)
+        oID = order_id.first()
+        if not oID:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"Order with id {id} is not registed.")
+        
+        
+        order_id.delete(synchronize_session=False)
+        db.commit()
+        
+        class_cancenled = db.query(models.State).filter(models.State.classes == "Canceled").first()
+        
+        if not class_cancenled:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"The class with Cancel does not exists.")
+        
+        
+        ticket_id = db.query(models.Ticket).filter(models.Ticket.id == id).filter(models.Ticket.state_id == class_cancenled.id)
+        tID = order_id.first()
+        if not oID:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"Ticket with id {tID.id} is not registed.")
+        
+        delete.class_id = class_cancenled.id
+        ticket_id.update(delete.dict(), synchronize_session=False)
+        db.commit()
+        
+        return 
+
 
 
 

@@ -1,3 +1,4 @@
+from datetime import date, timedelta
 from starlette.status import *
 from typing import List, Optional
 from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
@@ -20,10 +21,7 @@ router = APIRouter(
 @router.post("/", status_code=HTTP_201_CREATED, response_model=schemas.WaitListRES)
 def create_price(waitlist: schemas.WaitListREQ, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     
-    flag = False
-    cu = current_user.role
-    if cu == "admin" or cu == "root":
-        flag = True
+    flag = True
     
     if flag:
         waitlist = models.WaitList(**waitlist.dict())
@@ -132,3 +130,63 @@ def delete_price(id: int, db: Session = Depends(get_db), current_user: int = Dep
     
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
 
+@router.put("/promote/{id}", status_code=HTTP_202_ACCEPTED, response_model=schemas.WaitListRES)
+def promote(id: int, waitlist: schemas.OrderREQ, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+    
+    flag = False
+    cu = current_user.role
+    if cu == "admin" or cu == "root":
+        flag = True
+    
+    if flag:
+        # does it exist?
+        order = models.Order(**order.dict())
+        
+        # does it exist?
+        # need to verify:
+        
+        
+        verify_ticket = db.query(models.Ticket).filter(models.Ticket.id == order.ticket_id).first()
+        if not verify_ticket:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no Ticket with id {order.ticket_id} exists.")
+        
+        verify_card = db.query(models.Card).filter(models.Card.id == order.card_id).filter(models.Card.user_id == current_user.id).first()
+        if not verify_card:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no Card with id {order.card_id} exists.")
+        
+        
+        order.user_id = current_user.id
+        order.flight_id = verify_ticket.flight_id
+        verify_order = db.query(models.Order).filter(models.Order.user_id == order.user_id).filter(models.Order.flight_id == order.flight_id).all()
+        ser = len(verify_order)
+        
+        if ser == 10:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"You can't order more than 10 ticket with the same flights.")
+        order.state_id = 5
+        order.serial = ser
+        expdate = date.today()
+        order.expiredate = expdate + timedelta(days=90)
+        
+        verify_ticket = db.query(models.Ticket).filter(models.Ticket.id == order.ticket_id).first() # is empty
+        class_empty = db.query(models.State).filter(models.State.classes == "Empty").first()
+        class_cancenled = db.query(models.State).filter(models.State.classes == "Canceled").first()
+        
+        if not ((verify_ticket.state_id == class_empty.id) or (verify_ticket.class_id == class_cancenled.id)):
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"The Seat is reserved.")
+        
+        db.add(order)
+        db.commit()
+        db.refresh(order)
+        
+        waitlist_id = db.query(models.WaitList).filter(models.WaitList.id == id)
+        wID = waitlist_id.first()
+        if not wID:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"waitlist with id {id} is not registed.")
+        
+        
+        waitlist_id.delete(synchronize_session=False)
+        db.commit()
+        
+        return order
+    
+    raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)

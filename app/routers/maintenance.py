@@ -67,6 +67,26 @@ def get_maintenance(db: Session = Depends(get_db), current_user: int = Depends(o
         return maintenance
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
 
+
+@router.get("/{id}", status_code=HTTP_200_OK, response_model=List[schemas.MaintenanceRES])
+def get_maintenance(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+    
+    flag = False
+    cu = current_user.role
+    if cu == "admin" or cu == "root":
+        flag = True
+    
+    if flag:
+        
+        
+        maintenance = db.query(models.Maintenance).filter(models.Maintenance.id == id).first()
+        if not maintenance:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no maintenance with id {id} registed.")
+        
+        
+        return maintenance
+    raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
+
 @router.put("/{id}", status_code=HTTP_202_ACCEPTED, response_model=schemas.MaintenanceRES)
 def update_maintenance(id: int, maintenance: schemas.MaintenanceUpdateREQ, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     

@@ -15,9 +15,6 @@ app = FastAPI(
     title= "Air Line API",
     version= "1.0.0",
     description= "API - Project ICS-324 - Air Line System",
-    redoc_url="/documentation",
-    docs_url=None,
-    openapi_url="/openAPI",
 )
 
 
@@ -55,8 +52,11 @@ app.include_router(weight.router)
 def main():
     return {
             "Information": "This API for Air Line Application.",
-            "documentation": "/documentation",
-            "OpenAPI schema ": "/openAPI",
+            "Documentation": [
+                {"Swagger UI":"/docs"},
+                {"Redoc":"/redoc"},
+            ],
+            
             }
 
 

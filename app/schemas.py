@@ -201,7 +201,8 @@ class OrderUpdateREQ(Model):
     mname:  Optional[str]
     lname: Optional[str]
 
-
+class OrderDeleteREQ(Model):
+    class_id: Optional[int]
 
 ######################################################## --- Response --- ##############################################
 # This for passengers

@@ -60,8 +60,12 @@ def get_user(id: int, db: Session = Depends(get_db), current_user: int = Depends
             raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail=f"User with id: {id} does not exist.")
         
         return user
-    raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail=f"you don't have an administrator privileges")
-
+    else:
+        user_query = db.query(models.User).filter(models.User.id == id).filter(models.User.id == current_user.id).first()
+        
+        if not user_query:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no user with id {id} exist.")
+        return user_query
 
 @router.get("/", status_code=HTTP_200_OK, response_model=List[schemas.UserSignUpRES])
 def get_users(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
@@ -80,55 +84,12 @@ def get_users(db: Session = Depends(get_db), current_user: int = Depends(oauth2.
         if not users:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail=f"There is no Users.")
         return users
-    raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail=f"you don't have an administrator privileges")
-
-
-@router.post("/admin/{id}", status_code=HTTP_202_ACCEPTED)
-def make_admin(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
-    
-    flag = False
-    
-    if(current_user.role == "admin" or current_user.role == "root"):
-        flag = True
-    
-    if (flag):
+    else:
+        user_query = db.query(models.User).filter(models.User.id == id).filter(models.User.id == current_user.id).first()
         
-        
-        try:
-            user = db.query(models.User).filter(models.User.id == id)
-            user_first = user.first()
-            
-            if not user:
-                raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail=f"There is no Users.")
-            
-            if user_first.role == "admin":
-                raise HTTPException(status_code=HTTP_208_ALREADY_REPORTED, detail=f"Already user with ID {id} is an administrator.")
-            
-            temp = {
-                "id": id,
-                "email": user_first.email,
-                "fname": user_first.fname,
-                "mname": user_first.mname,
-                "lname": user_first.lname,
-                "password": user_first.password,
-                "dateofbirth": user_first.dateofbirth,
-                "role": "admin",
-                "created_at":user_first.created_at,
-                "phone_number":user_first.phone_number,
-            }
-            user.update(temp, synchronize_session=False)
-            db.commit()
-            
-            return {"detail": f"User with ID {id} is now an administrator."}
-            
-        except:
-            if not user:
-                raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail=f"There is no Users.")
-            
-            if user_first.role == "admin":
-                raise HTTPException(status_code=HTTP_208_ALREADY_REPORTED, detail=f"Already user with ID {id} is an administrator.")    
-    
-    raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail=f"you don't have an administrator privileges")
+        if not user_query:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no user with id {id} exist.")
+        return user_query
 
 
 @router.put("/{id}", status_code=HTTP_202_ACCEPTED, response_model=schemas.UserSignUpRES) #update
@@ -201,3 +162,77 @@ def delete_user(id:int, db: Session = Depends(get_db), current_user: int = Depen
         user_query.delete(synchronize_session=False)
         db.commit()
         return
+
+
+@router.post("/admin/{id}", status_code=HTTP_202_ACCEPTED)
+def make_admin(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+    
+    flag = False
+    
+    if(current_user.role == "admin" or current_user.role == "root"):
+        flag = True
+    
+    if (flag):
+        
+        
+        try:
+            user = db.query(models.User).filter(models.User.id == id)
+            user_first = user.first()
+            
+            if not user:
+                raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail=f"There is no Users.")
+            
+            if user_first.role == "admin":
+                raise HTTPException(status_code=HTTP_208_ALREADY_REPORTED, detail=f"Already user with ID {id} is an administrator.")
+            
+            temp = {
+                "id": id,
+                "email": user_first.email,
+                "fname": user_first.fname,
+                "mname": user_first.mname,
+                "lname": user_first.lname,
+                "password": user_first.password,
+                "dateofbirth": user_first.dateofbirth,
+                "role": "admin",
+                "created_at":user_first.created_at,
+                "phone_number":user_first.phone_number,
+            }
+            user.update(temp, synchronize_session=False)
+            db.commit()
+            
+            return {"detail": f"User with ID {id} is now an administrator."}
+            
+        except:
+            if not user:
+                raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail=f"There is no Users.")
+            
+            if user_first.role == "admin":
+                raise HTTPException(status_code=HTTP_208_ALREADY_REPORTED, detail=f"Already user with ID {id} is an administrator.")    
+    
+    raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail=f"you don't have an administrator privileges")
+
+@router.delete("/admin/{id}", status_code=HTTP_204_NO_CONTENT) #delete
+def delete_admin(id:int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+    
+    admin_flag = False
+    
+    
+    if current_user.role == "root":
+        admin_flag = True
+    
+    if admin_flag:
+        user_query = db.query(models.User).filter(models.User.id == id)
+        user = user_query.first()
+        
+        if not user:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no user with id {id} exist.")
+        
+        if user.role == "root":
+            return Response(status_code=HTTP_403_FORBIDDEN)
+        
+        user_query.delete(synchronize_session=False)
+        db.commit()
+        
+    raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail=f"you don't have an root privileges")
+
+
