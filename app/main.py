@@ -54,7 +54,7 @@ def main():
             "Information": "This API for Air Line Application.",
             "Documentation": [
                 {"Swagger UI":"/docs"},
-                {"Redoc":"/redoc"},
+                {"ReDoc":"/redoc"},
             ],
             
             }
