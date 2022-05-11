@@ -221,7 +221,7 @@ def delete_admin(id:int, db: Session = Depends(get_db), current_user: int = Depe
         admin_flag = True
     
     if admin_flag:
-        user_query = db.query(models.User).filter(models.User.id == id)
+        user_query = db.query(models.Admin).filter(models.Admin.user_id == id)
         user = user_query.first()
         
         if not user:
