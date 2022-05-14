@@ -176,7 +176,7 @@ class TicketREQ(Model):
     time: time
     flight_id: int
     weight_id: int
-    state_id: int
+    state_id: int = 3
     class_id: int
     seat_id: int
     price_id: int
@@ -211,6 +211,8 @@ class MakingAdminREQ(Model):
     user_id: Optional[int]
     salary: Optional[int]
 
+class TicketUpdateState(Model):
+    state_id: Optional[int]
 
 ######################################################## --- Response --- ##############################################
 # This for passengers

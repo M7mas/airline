@@ -19,7 +19,7 @@ router = APIRouter(
 # to verify you'r logedin current_user: int = Depends(oauth2.get_current_user)
 
 @router.post("/", status_code=HTTP_201_CREATED, response_model=schemas.OrderRES)
-def create_order(order: schemas.OrderREQ, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def create_order(order: schemas.OrderREQ, ticket: Optional[schemas.TicketUpdateState], db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     
     flag = True
     
@@ -36,7 +36,7 @@ def create_order(order: schemas.OrderREQ, db: Session = Depends(get_db), current
         
         verify_card = db.query(models.Card).filter(models.Card.id == order.card_id).filter(models.Card.user_id == current_user.id).first()
         if not verify_card:
-            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no Card with id {order.card_id} exists.")
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no Card with user id {current_user.id} exists.")
         
         
         order.user_id = current_user.id
@@ -58,9 +58,18 @@ def create_order(order: schemas.OrderREQ, db: Session = Depends(get_db), current
         if not ((verify_ticket.state_id == class_empty.id) or (verify_ticket.class_id == class_cancenled.id)):
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"The Seat is reserved.")
         
+        
         db.add(order)
         db.commit()
         db.refresh(order)
+        
+        ticket.state_id = 1
+        update_ticket = models.Ticket(**ticket.dict())
+        
+        ticket_id = db.query(models.Ticket).filter(models.Ticket.id == id)
+        ticket_id.update(update_ticket.dict(), synchronize_session=False)
+        db.commit()
+        
         return order
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
 

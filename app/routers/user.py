@@ -165,7 +165,7 @@ def delete_user(id:int, db: Session = Depends(get_db), current_user: int = Depen
 
 
 @router.post("/admin/{id}", status_code=HTTP_202_ACCEPTED)
-def make_admin(id: int, mAdmin: schemas.MakingAdminREQ,  db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def make_admin(id: int, mAdmin: Optional[schemas.MakingAdminREQ],  db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     
     flag = False
     
@@ -221,7 +221,7 @@ def make_admin(id: int, mAdmin: schemas.MakingAdminREQ,  db: Session = Depends(g
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail=f"you don't have an administrator privileges")
 
 @router.delete("/admin/{id}", status_code=HTTP_204_NO_CONTENT) #delete
-def delete_admin(id:int, dAdmin: schemas.UserUpdateRoleREQ, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def delete_admin(id:int, dAdmin: Optional[schemas.UserUpdateRoleREQ], db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     
     admin_flag = False
     

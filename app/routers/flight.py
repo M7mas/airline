@@ -114,7 +114,7 @@ def update_flight(id: int, flight: schemas.FlightUpdateREQ, db: Session = Depend
         
         verify_fine = db.query(models.State).filter(models.State.id == flight.state_id).first()
         temp = verify_fine.state
-        if temp == "canceled" or temp == "missed":
+        if temp == "Canceled" or temp == "Missed":
             tempo_dict = {"flight_id":id, "amount":"1500", "state_id":flight.state_id}
             tempo = models.Fine(**tempo_dict)
             db.add(tempo)
