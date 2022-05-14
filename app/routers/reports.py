@@ -50,7 +50,7 @@ def get_active_flights(db: Session = Depends(get_db), current_user: int = Depend
     
     if flag:
         
-        state = db.query(models.State).filter(models.State.state == "active").first()
+        state = db.query(models.State).filter(models.State.state == "Active").first()
         if not state:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no state with active registed.")
         
@@ -77,7 +77,7 @@ def get_percantage(date: date, db: Session = Depends(get_db), current_user: int 
         if not flights:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no flight on {date}.")
         
-        state = db.query(models.State).filter(models.State.state == "confirmed").first()
+        state = db.query(models.State).filter(models.State.state == "Confirmed").first()
         if not state:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no state with confirmed registed.")
         
@@ -112,9 +112,9 @@ def get_payment(db: Session = Depends(get_db), current_user: int = Depends(oauth
     
     if flag:
         
-        state = db.query(models.State).filter(models.State.state == "accepted").first()
+        state = db.query(models.State).filter(models.State.state == "Confirmed").first()
         if not state:
-            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no state with accepted registed.")
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no state with Confirmed registed.")
         
         order = db.query(models.Order).filter(models.Order.state_id == state.id).all()
         if not order:
@@ -157,9 +157,9 @@ def get_order(date: date, db: Session = Depends(get_db), current_user: int = Dep
         if not flights:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no flight on {date}.")
         
-        state = db.query(models.State).filter(models.State.state == "confirmed").first()
+        state = db.query(models.State).filter(models.State.state == "Confirmed").first()
         if not state:
-            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no state with confirmed registed.")
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no state with Confirmed registed.")
         
         temp = len(flights)+1
         for i in flights:
@@ -188,9 +188,9 @@ def get_ticket(db: Session = Depends(get_db), current_user: int = Depends(oauth2
     
     if flag:
         
-        state = db.query(models.State).filter(models.State.state == "canceled").first()
+        state = db.query(models.State).filter(models.State.state == "Canceled").first()
         if not state:
-            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no state with canceled registed.")
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no state with Canceled registed.")
         
         ticket = db.query(models.Ticket).filter(models.Ticket.state_id == state.id).all()
         if not ticket:
