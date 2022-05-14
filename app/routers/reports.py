@@ -109,10 +109,10 @@ def get_percantage(date: date, db: Session = Depends(get_db), current_user: int 
             
             per = str(((confiremed+1) / (all)) * 100) + "%"
             
-            # lDict.append({
-            #     "flight_id": f"{i.id}",
-            #     "percantage": per,
-            # })
+            lDict.append({
+                "flight_id": f"{i.id}",
+                "percantage": per,
+            })
         
         
         return lDict
