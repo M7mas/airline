@@ -46,7 +46,7 @@ def create_order(order: schemas.OrderREQ, ticket: Optional[schemas.TicketUpdateS
         
         if ser == 10:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"You can't order more than 10 ticket with the same flights.")
-        order.state_id = 5
+        order.state_id = 1
         order.serial = ser
         expdate = date.today()
         order.expiredate = expdate + timedelta(days=90)
@@ -63,7 +63,7 @@ def create_order(order: schemas.OrderREQ, ticket: Optional[schemas.TicketUpdateS
         db.commit()
         db.refresh(order)
         
-        ticket.state_id = 1
+        ticket.state_id = 7
         ticket_id = db.query(models.Ticket).filter(models.Ticket.id == id)
         ticket_id.update(ticket.dict(), synchronize_session=False)
         db.commit()
