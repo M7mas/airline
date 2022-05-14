@@ -179,7 +179,7 @@ def delete_order(id: int, delete: Optional[schemas.TicketUpdateState], db: Sessi
         if not class_cancenled:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"The class with Cancel does not exists.")
         
-        
+        id = oID.id
         ticket_id = db.query(models.Ticket).filter(models.Ticket.id == id).filter(models.Ticket.state_id == class_cancenled.id)
         tID = ticket_id.first()
         if not tID:
@@ -206,7 +206,7 @@ def delete_order(id: int, delete: Optional[schemas.TicketUpdateState], db: Sessi
         if not class_cancenled:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"The class with Cancel does not exists.")
         
-        
+        id = oID.id
         ticket_id = db.query(models.Ticket).filter(models.Ticket.id == id).filter(models.Ticket.state_id == class_cancenled.id)
         tID = ticket_id.first()
         if not tID:
