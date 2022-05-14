@@ -19,7 +19,7 @@ router = APIRouter(
 # to verify you'r logedin current_user: int = Depends(oauth2.get_current_user)
 
 @router.post("/", status_code=HTTP_201_CREATED, response_model=schemas.WaitListRES)
-def create_price(waitlist: schemas.WaitListREQ, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def create_waitlist(waitlist: schemas.WaitListREQ, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     
     flag = True
     
@@ -60,7 +60,7 @@ def create_price(waitlist: schemas.WaitListREQ, db: Session = Depends(get_db), c
             
             eco = db.query(models.WaitList).filter(models.WaitList.flight_id == waitlist.flight_id).filter(models.WaitList.class_id == 4).all()
             
-            if eco >= 7:
+            if len(eco) >= 7:
                 raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There are already 7 registered for this flight {waitlist.flight_id}.")
             else:
                 db.add(waitlist)
@@ -71,7 +71,7 @@ def create_price(waitlist: schemas.WaitListREQ, db: Session = Depends(get_db), c
         elif waitlist.class_id == 2:
             
             bus = db.query(models.WaitList).filter(models.WaitList.flight_id == waitlist.flight_id).filter(models.WaitList.class_id == 2).all()
-            if bus >= 3:
+            if len(bus) >= 3:
                 raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There are already 3 registered for this flight {waitlist.flight_id}.")
             else:
                 db.add(waitlist)
@@ -88,7 +88,7 @@ def create_price(waitlist: schemas.WaitListREQ, db: Session = Depends(get_db), c
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
 
 @router.get("/", status_code=HTTP_200_OK, response_model=List[schemas.WaitListRES])
-def get_price(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def get_waitlist(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     
     flag = False
     cu = current_user.role
@@ -107,7 +107,7 @@ def get_price(db: Session = Depends(get_db), current_user: int = Depends(oauth2.
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
 
 @router.put("/{id}", status_code=HTTP_202_ACCEPTED, response_model=schemas.WaitListRES)
-def update_price(id: int, waitlist: schemas.WaitListUpdateREQ, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def update_waitlist(id: int, waitlist: schemas.WaitListUpdateREQ, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     
     flag = False
     cu = current_user.role
@@ -135,7 +135,7 @@ def update_price(id: int, waitlist: schemas.WaitListUpdateREQ, db: Session = Dep
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
 
 @router.delete("/{id}", status_code=HTTP_204_NO_CONTENT)
-def delete_price(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def delete_waitlist(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     
     flag = False
     cu = current_user.role
