@@ -87,14 +87,17 @@ def get_percantage(date: date, db: Session = Depends(get_db), current_user: int 
             confiremed_ticket = db.query(models.Ticket).filter(models.Ticket.flight_id == i.id).filter(models.Ticket.state_id == state.id).all()
             
             if len(all_ticket) == 0:
-                lDict.append({"flight_id": "{i.id}",
-                            "error":"there is no ticket with flight id {i.id}"})
+                lDict.append({"flight_id": f"{i.id}",
+                            "error":f"there is no ticket with flight id {i.id}"})
                 continue
             
-            per = str(((len(confiremed_ticket)+1) / (len(all_ticket)+1)) * 100) + "%"
+            if len(confiremed_ticket) == 0:
+                per = "0%"
+            else:
+                per = str(((len(confiremed_ticket)+1) / (len(all_ticket)+1)) * 100) + "%"
             
             lDict.append({
-                "flight_id": "{i.id}",
+                "flight_id": f"{i.id}",
                 "percantage": per,
             })
         
@@ -118,7 +121,7 @@ def get_payment(db: Session = Depends(get_db), current_user: int = Depends(oauth
         
         order = db.query(models.Order).filter(models.Order.state_id == state.id).all()
         if not order:
-            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no order registed.")
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no order confirmed registed.")
         
         
         return order
@@ -169,6 +172,11 @@ def get_order(date: date, db: Session = Depends(get_db), current_user: int = Dep
             
             if len(all_ticket) == 0:
                 continue
+            
+            if len(confiremed_ticket) == 0:
+                per = "0%"
+            else:
+                per = str(((len(confiremed_ticket)+1) / (len(all_ticket)+1)) * 100) + "%"
             
             per = (((len(confiremed_ticket)+1) / (len(all_ticket)+1)) * 100)
             lDict.append(per)
