@@ -174,7 +174,7 @@ def get_order(date: date, db: Session = Depends(get_db), current_user: int = Dep
                 continue
             
             if len(confiremed_ticket) == 0:
-                per = "0"
+                per = 0
             else:
                 per = (((len(confiremed_ticket)+1) / (len(all_ticket)+1)) * 100)
             
