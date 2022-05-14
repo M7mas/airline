@@ -155,7 +155,7 @@ def update_order(id: int, order: schemas.OrderUpdateREQ, db: Session = Depends(g
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
 
 @router.delete("/{id}", status_code=HTTP_204_NO_CONTENT)
-def delete_order(id: int, delete: Optional[schemas.OrderDeleteREQ], db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def delete_order(id: int, delete: Optional[schemas.TicketUpdateState], db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     
     flag = False
     cu = current_user.role
