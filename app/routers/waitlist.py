@@ -158,7 +158,7 @@ def delete_waitlist(id: int, db: Session = Depends(get_db), current_user: int = 
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
 
 @router.put("/promote/{id}", status_code=HTTP_202_ACCEPTED, response_model=schemas.OrderRES)
-def promote(id: int, waitlist: schemas.OrderREQ, ticket: Optional[schemas.TicketUpdateState], db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def promote(id: int, order: schemas.OrderREQ, ticket: Optional[schemas.TicketUpdateState], db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     
     flag = False
     cu = current_user.role
@@ -167,7 +167,7 @@ def promote(id: int, waitlist: schemas.OrderREQ, ticket: Optional[schemas.Ticket
     
     if flag:
         # does it exist?
-        order = models.Order(**waitlist.dict())
+        order = models.Order(**order.dict())
         
         # does it exist?
         # need to verify:
