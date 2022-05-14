@@ -100,12 +100,7 @@ def get_percantage(date: date, db: Session = Depends(get_db), current_user: int 
                 confiremed_ticket = -1
             else:
                 confiremed = len(cticket)
-            # canceled_ticket = db.query(models.Ticket).filter(models.Ticket.flight_id == i.id).filter(models.Ticket.state_id == 4).all()
             
-            # if len(all_ticket) == 0:
-                # lDict.append({"flight_id": f"{i.id}",
-                #             "error":f"there is no ticket with flight id {i.id}"})
-                # continue
             
             per = str(((confiremed) / (all)) * 100) + "%"
             
@@ -180,15 +175,28 @@ def get_order(date: date, db: Session = Depends(get_db), current_user: int = Dep
         temp = len(flights)
         for i in flights:
             
-            all_ticket = db.query(models.Ticket).filter(models.Ticket.flight_id == i.id).all()
-            confiremed_ticket = db.query(models.Ticket).filter(models.Ticket.flight_id == i.id).filter(models.Ticket.state_id == state.id).all()
+            all = 0
+            confiremed = 0
             
-            if len(all_ticket) == 0:
+            all_ticket = db.query(models.Ticket).filter(models.Ticket.flight_id == i.id)
+            aticket = all_ticket.all()
+            if not aticket:
+                lDict.append({"flight_id": f"{i.id}",
+                        "error":f"there is no ticket with flight id {i.id}"})
                 continue
-            elif len(confiremed_ticket) == 0:
-                per = 0
             else:
-                per = (((len(confiremed_ticket)+1) / (len(all_ticket))) * 100)
+                all = len(aticket)
+            
+            confiremed_ticket = db.query(models.Ticket).filter(models.Ticket.flight_id == i.id).filter(models.Ticket.state_id == 7)
+            cticket = confiremed_ticket.all()
+            if not cticket:
+                confiremed_ticket = -1
+            else:
+                confiremed = len(cticket)
+            
+            
+            per = (((confiremed) / (all)) * 100)
+            
             
             lDict.append(per)
         
