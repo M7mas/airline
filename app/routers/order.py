@@ -185,7 +185,7 @@ def delete_order(id: int, delete: Optional[schemas.OrderDeleteREQ], db: Session 
         if not oID:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"Ticket with id {tID.id} is not registed.")
         
-        delete.class_id = class_cancenled.id
+        delete.class_id = 4
         ticket_id.update(delete.dict(), synchronize_session=False)
         db.commit()
         
@@ -212,7 +212,7 @@ def delete_order(id: int, delete: Optional[schemas.OrderDeleteREQ], db: Session 
         if not oID:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"Ticket with id {tID.id} is not registed.")
         
-        delete.class_id = class_cancenled.id
+        delete.class_id = 4
         ticket_id.update(delete.dict(), synchronize_session=False)
         db.commit()
         

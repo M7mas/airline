@@ -89,7 +89,7 @@ class Order(Base):
     
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     flight_id = Column(Integer, ForeignKey("flights.id", ondelete="CASCADE"), nullable=False)
-    ticket_id = Column(Integer, ForeignKey("tickets.id", ondelete="CASCADE"), nullable=False)
+    ticket_id = Column(Integer, ForeignKey("tickets.id", ondelete="RESTRICT"), nullable=False)
     card_id = Column(Integer, ForeignKey("cards.id", ondelete="CASCADE"), nullable=False)
     state_id = Column(Integer, ForeignKey("states.id", ondelete="CASCADE"), nullable=False)
     
