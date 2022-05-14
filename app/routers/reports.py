@@ -181,8 +181,6 @@ def get_order(date: date, db: Session = Depends(get_db), current_user: int = Dep
             all_ticket = db.query(models.Ticket).filter(models.Ticket.flight_id == i.id)
             aticket = all_ticket.all()
             if not aticket:
-                lDict.append({"flight_id": f"{i.id}",
-                        "error":f"there is no ticket with flight id {i.id}"})
                 continue
             else:
                 all = len(aticket)
