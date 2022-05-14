@@ -181,7 +181,7 @@ def delete_order(id: int, delete: Optional[schemas.OrderDeleteREQ], db: Session 
         
         
         ticket_id = db.query(models.Ticket).filter(models.Ticket.id == id).filter(models.Ticket.state_id == class_cancenled.id)
-        tID = order_id.first()
+        tID = ticket_id.first()
         if not oID:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"Ticket with id {tID.id} is not registed.")
         
@@ -208,7 +208,7 @@ def delete_order(id: int, delete: Optional[schemas.OrderDeleteREQ], db: Session 
         
         
         ticket_id = db.query(models.Ticket).filter(models.Ticket.id == id).filter(models.Ticket.state_id == class_cancenled.id)
-        tID = order_id.first()
+        tID = ticket_id.first()
         if not oID:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"Ticket with id {tID.id} is not registed.")
         
