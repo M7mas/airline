@@ -91,9 +91,12 @@ def get_percantage(date: date, db: Session = Depends(get_db), current_user: int 
                             "error":f"there is no ticket with flight id {i.id}"})
                 continue
             
-            print(len(confiremed_ticket))
             if len(confiremed_ticket) == 0:
-                per = "0%"
+                try:
+                    x = str(confiremed_ticket[1])
+                except:
+                    per = 0
+                pass
             else:
                 per = str(((len(confiremed_ticket)+1) / (len(all_ticket)+1)) * 100) + "%"
             
