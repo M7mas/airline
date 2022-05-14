@@ -55,7 +55,7 @@ def create_order(order: schemas.OrderREQ, ticket: Optional[schemas.TicketUpdateS
         class_empty = db.query(models.State).filter(models.State.state == "Empty").first()
         class_cancenled = db.query(models.State).filter(models.State.state == "Canceled").first()
         
-        if not ((verify_ticket.state_id == class_empty.id) or (verify_ticket.class_id == class_cancenled.id)):
+        if not ((verify_ticket.state_id == class_empty.id) or (verify_ticket.state_id == class_cancenled.id)):
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"The Seat is reserved.")
         
         
