@@ -236,9 +236,6 @@ def delete_admin(id:int, dAdmin: Optional[schemas.UserUpdateRoleREQ], db: Sessio
         if not user:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no user with id {id} exist.")
         
-        if user.role == "root":
-            return Response(status_code=HTTP_403_FORBIDDEN)
-        
         user_query.delete(synchronize_session=False)
         db.commit()
         
