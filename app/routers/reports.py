@@ -103,9 +103,9 @@ def get_percantage(date: date, db: Session = Depends(get_db), current_user: int 
             # canceled_ticket = db.query(models.Ticket).filter(models.Ticket.flight_id == i.id).filter(models.Ticket.state_id == 4).all()
             
             # if len(all_ticket) == 0:
-                lDict.append({"flight_id": f"{i.id}",
-                            "error":f"there is no ticket with flight id {i.id}"})
-                continue
+                # lDict.append({"flight_id": f"{i.id}",
+                #             "error":f"there is no ticket with flight id {i.id}"})
+                # continue
             
             per = str(((confiremed+1) / (all)) * 100) + "%"
             
