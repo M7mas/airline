@@ -46,7 +46,9 @@ class UserUpdateREQ(Model):
     password: Optional[str] = Field(alias="Password")
     dateofbirth: Optional[date] = Field(alias="Date_of_Birth")
     phone_number: Optional[str] = Field(alias="Phone_Number")
-    
+
+class UserUpdateRoleREQ(Model):
+    role: Optional[str]
 class CardsREQ(Model):
     user_id: int = 0
     type: str
@@ -203,6 +205,12 @@ class OrderUpdateREQ(Model):
 
 class OrderDeleteREQ(Model):
     class_id: Optional[int]
+
+
+class MakingAdminREQ(Model):
+    user_id: Optional[int]
+    salary: Optional[int]
+
 
 ######################################################## --- Response --- ##############################################
 # This for passengers

@@ -165,7 +165,7 @@ def delete_user(id:int, db: Session = Depends(get_db), current_user: int = Depen
 
 
 @router.post("/admin/{id}", status_code=HTTP_202_ACCEPTED)
-def make_admin(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def make_admin(id: int, mAdmin: schemas.MakingAdminREQ,  db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     
     flag = False
     
@@ -200,6 +200,15 @@ def make_admin(id: int, db: Session = Depends(get_db), current_user: int = Depen
             user.update(temp, synchronize_session=False)
             db.commit()
             
+
+            mAdmin.user_id = id
+            mAdmin.salary = 5000
+            
+            makingAdmin = models.Admin(**mAdmin.dict()) 
+            db.add(makingAdmin)
+            db.commit()
+            db.refresh(makingAdmin)
+            
             return {"detail": f"User with ID {id} is now an administrator."}
             
         except:
@@ -212,7 +221,7 @@ def make_admin(id: int, db: Session = Depends(get_db), current_user: int = Depen
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail=f"you don't have an administrator privileges")
 
 @router.delete("/admin/{id}", status_code=HTTP_204_NO_CONTENT) #delete
-def delete_admin(id:int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def delete_admin(id:int, dAdmin: schemas.UserUpdateRoleREQ, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     
     admin_flag = False
     
@@ -232,6 +241,22 @@ def delete_admin(id:int, db: Session = Depends(get_db), current_user: int = Depe
         
         user_query.delete(synchronize_session=False)
         db.commit()
+        
+        
+        
+        dAdmin.role = "user"
+        
+        user_query = db.query(models.User).filter(models.User.id == id)
+        user = user_query.first()
+        
+        if not user:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no user with id {id} exist.")
+        
+        user.role = "user"
+        
+        user_query.update(dAdmin.dict(), synchronize_session=False)
+        db.commit()
+        
         
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail=f"you don't have an root privileges")
 

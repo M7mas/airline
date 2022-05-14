@@ -54,10 +54,37 @@ def create_price(waitlist: schemas.WaitListREQ, db: Session = Depends(get_db), c
         if verify_waitlist:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is already a waitlist with user: {waitlist.user_id}, flight: {waitlist.flight_id} exists.")
         
-        db.add(waitlist)
-        db.commit()
-        db.refresh(waitlist)
-        return waitlist
+        # This checking is for 7 eco; 3 business.
+        
+        if waitlist.class_id == 4:
+            
+            eco = db.query(models.WaitList).filter(models.WaitList.flight_id == waitlist.flight_id).filter(models.WaitList.class_id == 4).all()
+            
+            if eco >= 7:
+                raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There are already 7 registered for this flight {waitlist.flight_id}.")
+            else:
+                db.add(waitlist)
+                db.commit()
+                db.refresh(waitlist)
+                return waitlist
+            
+        elif waitlist.class_id == 2:
+            
+            bus = db.query(models.WaitList).filter(models.WaitList.flight_id == waitlist.flight_id).filter(models.WaitList.class_id == 2).all()
+            if bus >= 3:
+                raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There are already 3 registered for this flight {waitlist.flight_id}.")
+            else:
+                db.add(waitlist)
+                db.commit()
+                db.refresh(waitlist)
+                return waitlist
+            
+        else:
+            
+            db.add(waitlist)
+            db.commit()
+            db.refresh(waitlist)
+            return waitlist
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
 
 @router.get("/", status_code=HTTP_200_OK, response_model=List[schemas.WaitListRES])
