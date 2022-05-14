@@ -169,7 +169,7 @@ def delete_order(id: int, delete: Optional[schemas.TicketUpdateState], db: Sessi
         oID = order_id.first()
         if not oID:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"Order with id {id} is not registed.")
-        id = oID.id
+        id = oID.ticket_id
         
         order_id.delete(synchronize_session=False)
         db.commit()
@@ -182,7 +182,7 @@ def delete_order(id: int, delete: Optional[schemas.TicketUpdateState], db: Sessi
         ticket_id = db.query(models.Ticket).filter(models.Ticket.id == id).filter(models.Ticket.state_id == class_cancenled.id)
         tID = ticket_id.first()
         if not tID:
-            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"Ticket with id {tID.id} is not registed.")
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"Ticket with id {id} is not registed.")
         
         delete.state_id = 4
         ticket_id.update(delete.dict(), synchronize_session=False)
@@ -196,7 +196,7 @@ def delete_order(id: int, delete: Optional[schemas.TicketUpdateState], db: Sessi
         if not oID:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"Order with id {id} is not registed.")
         
-        id = oID.id
+        id = oID.ticket_id
         order_id.delete(synchronize_session=False)
         db.commit()
         
@@ -209,7 +209,7 @@ def delete_order(id: int, delete: Optional[schemas.TicketUpdateState], db: Sessi
         ticket_id = db.query(models.Ticket).filter(models.Ticket.id == id).filter(models.Ticket.state_id == class_cancenled.id)
         tID = ticket_id.first()
         if not tID:
-            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"Ticket with id {tID.id} is not registed.")
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"Ticket with id {id} is not registed.")
         
         delete.state_id = 4
         ticket_id.update(delete.dict(), synchronize_session=False)
