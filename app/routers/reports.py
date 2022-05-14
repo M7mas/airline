@@ -172,7 +172,7 @@ def get_order(date: date, db: Session = Depends(get_db), current_user: int = Dep
         if not state:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no state with Confirmed registed.")
         
-        temp = len(flights)
+        temp = len(flights)+0
         for i in flights:
             
             all = 0
