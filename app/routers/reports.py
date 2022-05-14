@@ -92,17 +92,10 @@ def get_percantage(date: date, db: Session = Depends(get_db), current_user: int 
                 continue
             
             if len(confiremed_ticket) == 0:
-                try:
-                    
-                    x = confiremed_ticket[1].state_id
-                    temp = x * x 
-                    per = str(((len(confiremed_ticket)+1) / (len(all_ticket)+1)) * 100) + "%"
-                    
-                except:
-                    per = "0%"
+                per = "0%"
                 
             else:
-                per = str(((len(confiremed_ticket)+1) / (len(all_ticket)+1)) * 100) + "%"
+                per = str(((len(confiremed_ticket)) / (len(all_ticket))) * 100) + "%"
             
             lDict.append({
                 "flight_id": f"{i.id}",
@@ -180,11 +173,10 @@ def get_order(date: date, db: Session = Depends(get_db), current_user: int = Dep
             
             if len(all_ticket) == 0:
                 continue
-            
             elif len(confiremed_ticket) == 0:
                 per = 0
             else:
-                per = (((len(confiremed_ticket)+1) / (len(all_ticket)+1)) * 100)
+                per = (((len(confiremed_ticket)) / (len(all_ticket))) * 100)
             
             lDict.append(per)
         
