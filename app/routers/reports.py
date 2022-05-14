@@ -107,7 +107,7 @@ def get_percantage(date: date, db: Session = Depends(get_db), current_user: int 
                 #             "error":f"there is no ticket with flight id {i.id}"})
                 # continue
             
-            per = str(((confiremed+1) / (all)) * 100) + "%"
+            per = str(((confiremed) / (all)) * 100) + "%"
             
             lDict.append({
                 "flight_id": f"{i.id}",
