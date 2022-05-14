@@ -176,9 +176,8 @@ def get_order(date: date, db: Session = Depends(get_db), current_user: int = Dep
             if len(confiremed_ticket) == 0:
                 per = "0%"
             else:
-                per = str(((len(confiremed_ticket)+1) / (len(all_ticket)+1)) * 100) + "%"
+                per = str(((len(confiremed_ticket)+1) / (len(all_ticket)+1)) * 100)
             
-            per = (((len(confiremed_ticket)+1) / (len(all_ticket)+1)) * 100)
             lDict.append(per)
         
         avg = sum(lDict)/ temp
