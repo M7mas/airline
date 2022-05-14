@@ -67,7 +67,7 @@ def create_order(order: schemas.OrderREQ, ticket: Optional[schemas.TicketUpdateS
         update_ticket = models.Ticket(**ticket.dict())
         
         ticket_id = db.query(models.Ticket).filter(models.Ticket.id == id)
-        ticket_id.update(update_ticket.dict(), synchronize_session=False)
+        ticket_id.update(ticket.dict(), synchronize_session=False)
         db.commit()
         
         return order
