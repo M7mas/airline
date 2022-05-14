@@ -91,7 +91,7 @@ def get_percantage(date: date, db: Session = Depends(get_db), current_user: int 
                             "error":f"there is no ticket with flight id {i.id}"})
                 continue
             
-            per = str(((len(confiremed_ticket)) / (len(all_ticket))) * 100) + "%"
+            per = str(((len(confiremed_ticket)+1) / (len(all_ticket))) * 100) + "%"
             
             lDict.append({
                 "flight_id": f"{i.id}",
@@ -161,7 +161,7 @@ def get_order(date: date, db: Session = Depends(get_db), current_user: int = Dep
         if not state:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no state with Confirmed registed.")
         
-        temp = len(flights)+1
+        temp = len(flights)
         for i in flights:
             
             all_ticket = db.query(models.Ticket).filter(models.Ticket.flight_id == i.id).all()
