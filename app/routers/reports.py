@@ -94,7 +94,7 @@ def get_percantage(date: date, db: Session = Depends(get_db), current_user: int 
             else:
                 all = len(aticket)
             
-            confiremed_ticket = db.query(models.Ticket).filter(models.Ticket.flight_id == i.id).filter(models.Ticket.state_id == state.id)
+            confiremed_ticket = db.query(models.Ticket).filter(models.Ticket.flight_id == i.id).filter(models.Ticket.state_id == 7)
             cticket = confiremed_ticket.all()
             if not cticket:
                 confiremed_ticket = -1
