@@ -85,13 +85,14 @@ def get_percantage(date: date, db: Session = Depends(get_db), current_user: int 
             
             all_ticket = db.query(models.Ticket).filter(models.Ticket.flight_id == i.id).all()
             confiremed_ticket = db.query(models.Ticket).filter(models.Ticket.flight_id == i.id).filter(models.Ticket.state_id == state.id).all()
+            canceled_ticket = db.query(models.Ticket).filter(models.Ticket.flight_id == i.id).filter(models.Ticket.state_id == 4).all()
             
             if len(all_ticket) == 0:
                 lDict.append({"flight_id": f"{i.id}",
                             "error":f"there is no ticket with flight id {i.id}"})
                 continue
             
-            per = str(((len(confiremed_ticket)+1) / (len(all_ticket))) * 100) + "%"
+            per = str(((len(confiremed_ticket)+1-len(canceled_ticket)) / (len(all_ticket))) * 100) + "%"
             
             lDict.append({
                 "flight_id": f"{i.id}",
@@ -172,7 +173,7 @@ def get_order(date: date, db: Session = Depends(get_db), current_user: int = Dep
             elif len(confiremed_ticket) == 0:
                 per = 0
             else:
-                per = (((len(confiremed_ticket)) / (len(all_ticket))) * 100)
+                per = (((len(confiremed_ticket)+1) / (len(all_ticket))) * 100)
             
             lDict.append(per)
         
