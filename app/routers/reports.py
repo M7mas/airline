@@ -93,11 +93,14 @@ def get_percantage(date: date, db: Session = Depends(get_db), current_user: int 
             
             if len(confiremed_ticket) == 0:
                 try:
-                    print(type(confiremed_ticket[0]))
-                    confiremed_ticket[1] = str("s")
+                    
+                    x = confiremed_ticket[1].state_id
+                    temp = x * x 
+                    per = str(((len(confiremed_ticket)+1) / (len(all_ticket)+1)) * 100) + "%"
+                    
                 except:
-                    per = 0
-                pass
+                    per = "0%"
+                
             else:
                 per = str(((len(confiremed_ticket)+1) / (len(all_ticket)+1)) * 100) + "%"
             
