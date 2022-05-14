@@ -65,6 +65,10 @@ def create_order(order: schemas.OrderREQ, ticket: Optional[schemas.TicketUpdateS
         
         ticket.state_id = 7
         ticket_id = db.query(models.Ticket).filter(models.Ticket.id == id)
+        tID = ticket_id.first()
+        if not tID:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"Ticket with id {tID.id} is not registed.")
+        
         ticket_id.update(ticket.dict(), synchronize_session=False)
         db.commit()
         
@@ -170,7 +174,7 @@ def delete_order(id: int, delete: Optional[schemas.OrderDeleteREQ], db: Session 
         order_id.delete(synchronize_session=False)
         db.commit()
         
-        class_cancenled = db.query(models.State).filter(models.State.classes == "Canceled").first()
+        class_cancenled = db.query(models.State).filter(models.State.state == "Canceled").first()
         
         if not class_cancenled:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"The class with Cancel does not exists.")
@@ -197,7 +201,7 @@ def delete_order(id: int, delete: Optional[schemas.OrderDeleteREQ], db: Session 
         order_id.delete(synchronize_session=False)
         db.commit()
         
-        class_cancenled = db.query(models.State).filter(models.State.classes == "Canceled").first()
+        class_cancenled = db.query(models.State).filter(models.State.state == "Canceled").first()
         
         if not class_cancenled:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"The class with Cancel does not exists.")
