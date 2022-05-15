@@ -54,13 +54,13 @@ def create_waitlist(waitlist: schemas.WaitListREQ, db: Session = Depends(get_db)
         if verify_waitlist:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is already a waitlist with user: {waitlist.user_id}, flight: {waitlist.flight_id} exists.")
         
-        # This checking is for 7 eco; 3 business.
+        # This checking is for 10 eco; 3 others.
         
         if waitlist.class_id == 4:
             
             eco = db.query(models.WaitList).filter(models.WaitList.flight_id == waitlist.flight_id).filter(models.WaitList.class_id == 4).all()
             
-            if len(eco) >= 7:
+            if len(eco) >= 10:
                 raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There are already 7 registered for this flight {waitlist.flight_id}.")
             else:
                 db.add(waitlist)
@@ -79,12 +79,30 @@ def create_waitlist(waitlist: schemas.WaitListREQ, db: Session = Depends(get_db)
                 db.refresh(waitlist)
                 return waitlist
             
-        else:
+        elif waitlist.class_id == 1:
             
-            db.add(waitlist)
-            db.commit()
-            db.refresh(waitlist)
-            return waitlist
+            first = db.query(models.WaitList).filter(models.WaitList.flight_id == waitlist.flight_id).filter(models.WaitList.class_id == 1).all()
+            if len(first) >= 3:
+                raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There are already 3 registered for this flight {waitlist.flight_id}.")
+            else:
+                db.add(waitlist)
+                db.commit()
+                db.refresh(waitlist)
+                return waitlist
+            
+        elif waitlist.class_id == 3:
+            
+            premEco = db.query(models.WaitList).filter(models.WaitList.flight_id == waitlist.flight_id).filter(models.WaitList.class_id == 3).all()
+            if len(premEco) >= 3:
+                raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There are already 3 registered for this flight {waitlist.flight_id}.")
+            else:
+                db.add(waitlist)
+                db.commit()
+                db.refresh(waitlist)
+                return waitlist
+            
+        else:
+            raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail=f"There is no class other than First, business, premium economy and economy.")
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
 
 @router.get("/", status_code=HTTP_200_OK, response_model=List[schemas.WaitListRES])
