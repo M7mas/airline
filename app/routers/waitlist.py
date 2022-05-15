@@ -61,7 +61,7 @@ def create_waitlist(waitlist: schemas.WaitListREQ, db: Session = Depends(get_db)
             eco = db.query(models.WaitList).filter(models.WaitList.flight_id == waitlist.flight_id).filter(models.WaitList.class_id == 4).all()
             
             if len(eco) >= 10:
-                raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There are already 7 registered for this flight {waitlist.flight_id}.")
+                raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There are already 10 registered for this flight {waitlist.flight_id}.")
             else:
                 db.add(waitlist)
                 db.commit()
