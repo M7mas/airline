@@ -54,6 +54,9 @@ def create_flight(flight: schemas.FlightREQ, db: Session = Depends(get_db), curr
         return flight
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
 
+# Change it so anyone can see the current flight, no need for prior login
+# removed "current_user: int = Depends(oauth2.get_current_user)"
+# ^ just to verify the token.
 @router.get("/", status_code=HTTP_200_OK, response_model=List[schemas.FlightRES])
 def get_flight(db: Session = Depends(get_db), uFrom: Optional[str] = "", uTo: Optional[str] = ""):
     
