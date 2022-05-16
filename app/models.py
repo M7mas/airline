@@ -137,7 +137,7 @@ class Ticket(Base):
     __tablename__ = "tickets"
     
     id = Column(Integer, primary_key=True, nullable=False)
-    time = Column(Time(timezone=False), nullable=False)
+    # time = Column(Time(timezone=False), nullable=False)
     flight_id = Column(Integer, ForeignKey("flights.id", ondelete="CASCADE"), nullable=False)
     weight_id = Column(Integer, ForeignKey("weights.id", ondelete="CASCADE"), nullable=False)
     state_id = Column(Integer, ForeignKey("states.id", ondelete="CASCADE"), nullable=False)
@@ -159,7 +159,12 @@ class Flight(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     source_city = Column(String, nullable=False)
     destination_city = Column(String, nullable=False)
-    date = Column(Date, nullable=False)
+    
+    # for them to be on the database I'll make them now  nullable=True
+    tdate = Column(Date, nullable=True)
+    adate = Column(Date, nullable=True)
+    ttime = Column(Time(timezone=False), nullable=True)
+    atime = Column(Time(timezone=False), nullable=True)
     
     state_id = Column(Integer, ForeignKey("states.id", ondelete="CASCADE"), nullable=False)
     plane_id = Column(Integer, ForeignKey("planes.id", ondelete="CASCADE"), nullable=False)

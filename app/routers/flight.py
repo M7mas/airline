@@ -64,7 +64,7 @@ def get_flight(db: Session = Depends(get_db), uFrom: Optional[str] = "", uTo: Op
     
     if flag:
         
-        flight = db.query(models.Flight).filter(models.Flight.source_city.contains(uFrom)).filter(models.Flight.destination_city.contains(uTo)).all()
+        flight = db.query(models.Flight).filter(models.Flight.source_city.contains(uFrom)).filter(models.Flight.destination_city.contains(uTo)).filter(models.Flight.tdate >= date.today()).all()
         if not flight:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no flight registed.")
         
@@ -103,8 +103,15 @@ def update_flight(id: int, flight: schemas.FlightUpdateREQ, db: Session = Depend
             flight.source_city = fID.source_city
         if flight.destination_city is None:
             flight.destination_city = fID.destination_city
-        if flight.date is None:
-            flight.date = fID.date
+        if flight.tdate is None:
+            flight.tdate = fID.tdate
+        if flight.adate is None:
+            flight.adate = fID.adate
+        if flight.ttime is None:
+            flight.ttime = fID.ttime
+        if flight.atime is None:
+            flight.atime = fID.atime
+        
         if flight.state_id is None:
             flight.state_id = fID.state_id
         if flight.plane_id is None:

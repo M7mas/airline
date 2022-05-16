@@ -112,14 +112,20 @@ class PlaneREQ(Model):
 class FlightREQ(Model):
     source_city: str
     destination_city: str
-    date: date
+    tdate: date
+    adate: date
+    ttime: time
+    atime: time
     state_id: int
     plane_id: int
 
 class FlightUpdateREQ(Model):
     source_city: Optional[str]
     destination_city: Optional[str]
-    date: Optional[date]
+    tdate: Optional[date]
+    adate: Optional[date]
+    ttime: Optional[time]
+    atime: Optional[time]
     state_id: Optional[int]
     plane_id: Optional[int]
 
@@ -173,7 +179,7 @@ class WaitListUpdateREQ(Model):
     class_id: Optional[int]
 
 class TicketREQ(Model):
-    time: time
+    # time: time
     flight_id: int
     weight_id: int
     state_id: int = 3
@@ -182,7 +188,7 @@ class TicketREQ(Model):
     price_id: int
 
 class TicketUpdateREQ(Model):
-    time: Optional[time]
+    # time: Optional[time]
     weight_id: Optional[int]
     state_id: Optional[int]
     class_id: Optional[int]
@@ -276,7 +282,10 @@ class FlightRES(Model):
     id: int
     source_city: str
     destination_city: str
-    date: date
+    tdate: date
+    adate: date
+    ttime: time
+    atime: time
     state: StateRES
     plane: PlaneRES
 
@@ -319,7 +328,7 @@ class WaitListRES(Model):
 class TicketRES(Model):
     id: int
     flight: FlightRES
-    time: time
+    # time: time
     weight: WeightRES
     state: StateRES
     tclass: ClassRES = Field(alias="class")

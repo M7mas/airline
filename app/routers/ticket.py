@@ -120,8 +120,6 @@ def update_ticket(id: int, tickets: schemas.TicketUpdateREQ, db: Session = Depen
         if not tID:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"Ticket with id {id} is not registed.")
         
-        if tickets.time is None:
-            tickets.time = tID.time
         if tickets.weight_id is None:
             tickets.weight_id = tID.weight_id
         if tickets.state_id is None:
