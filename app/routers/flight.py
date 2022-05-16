@@ -73,18 +73,13 @@ def get_flight(db: Session = Depends(get_db), uFrom: Optional[str] = "", uTo: Op
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
 
 @router.get("/{id}", status_code=HTTP_200_OK, response_model=List[schemas.FlightRES])
-def get_flight(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def get_flight(id: int, db: Session = Depends(get_db)):
     
-    flag = True
+    flight = db.query(models.Flight).filter(models.Flight.id == id).first()
+    if not flight:
+        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no flight with id {id} registed.")
     
-    if flag:
-        
-        flight = db.query(models.Flight).filter(models.Flight.id == id).first()
-        if not flight:
-            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no flight with id {id} registed.")
-        
-        return flight
-    raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
+    return flight
 
 @router.put("/{id}", status_code=HTTP_202_ACCEPTED, response_model=schemas.FlightRES)
 def update_flight(id: int, flight: schemas.FlightUpdateREQ, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
