@@ -55,7 +55,7 @@ def create_flight(flight: schemas.FlightREQ, db: Session = Depends(get_db), curr
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
 
 @router.get("/", status_code=HTTP_200_OK, response_model=List[schemas.FlightRES])
-def get_flight(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user), uFrom: Optional[str] = "", uTo: Optional[str] = ""):
+def get_flight(db: Session = Depends(get_db), uFrom: Optional[str] = "", uTo: Optional[str] = ""):
     
     flag = True
     
