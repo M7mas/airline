@@ -67,29 +67,45 @@ def get_user(id: int, db: Session = Depends(get_db), current_user: int = Depends
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no user with id {id} exist.")
         return user_query
 
-@router.get("/", status_code=HTTP_200_OK, response_model=List[schemas.UserSignUpRES])
-def get_users(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
-    
-    flag = False
-    
-    if(current_user.role == "admin" or current_user.role == "root"):
-        flag = True
-    
-    if (flag):
-        try:
-            users = db.query(models.User).all()
-        except:
-            raise HTTPException(status_code=HTTP_424_FAILED_DEPENDENCY, detail=f"Try again")
 
-        if not users:
-            raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail=f"There is no Users.")
-        return users
-    else:
-        user_query = db.query(models.User).filter(models.User.id == id).filter(models.User.id == current_user.id).first()
+#new no need for login
+@router.get("/", status_code=HTTP_200_OK, response_model=List[schemas.UserSignUpRES])
+def get_users(db: Session = Depends(get_db)):
+    
+    try:
+        users = db.query(models.User).all()
+    except:
+        raise HTTPException(status_code=HTTP_424_FAILED_DEPENDENCY, detail=f"Try again")
+    
+    if not users:
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail=f"There is no Users.")
+    return users
+
+
+# old with login must .
+# @router.get("/", status_code=HTTP_200_OK, response_model=List[schemas.UserSignUpRES])
+# def get_users(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+    
+#     flag = False
+    
+#     if(current_user.role == "admin" or current_user.role == "root"):
+#         flag = True
+    
+#     if (flag):
+#         try:
+#             users = db.query(models.User).all()
+#         except:
+#             raise HTTPException(status_code=HTTP_424_FAILED_DEPENDENCY, detail=f"Try again")
+
+#         if not users:
+#             raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail=f"There is no Users.")
+#         return users
+#     else:
+#         user_query = db.query(models.User).filter(models.User.id == id).filter(models.User.id == current_user.id).first()
         
-        if not user_query:
-            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no user with id {id} exist.")
-        return user_query
+#         if not user_query:
+#             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no user with id {id} exist.")
+#         return user_query
 
 
 @router.put("/{id}", status_code=HTTP_202_ACCEPTED, response_model=schemas.UserSignUpRES) #update
