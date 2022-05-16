@@ -72,7 +72,7 @@ def get_flight(db: Session = Depends(get_db), uFrom: Optional[str] = "", uTo: Op
         return flight
     raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
 
-@router.get("/{id}", status_code=HTTP_200_OK, response_model=List[schemas.FlightRES])
+@router.get("/{id}", status_code=HTTP_200_OK, response_model=schemas.FlightRES)
 def get_flight(id: int, db: Session = Depends(get_db)):
     
     flight = db.query(models.Flight).filter(models.Flight.id == id).first()
