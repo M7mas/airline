@@ -161,10 +161,10 @@ class Flight(Base):
     destination_city = Column(String, nullable=False)
     
     # for them to be on the database I'll make them now  nullable=True
-    tdate = Column(Date, nullable=True)
-    adate = Column(Date, nullable=True)
-    ttime = Column(Time(timezone=False), nullable=True)
-    atime = Column(Time(timezone=False), nullable=True)
+    tdate = Column(Date, nullable=False)
+    adate = Column(Date, nullable=False)
+    ttime = Column(Time(timezone=False), nullable=False)
+    atime = Column(Time(timezone=False), nullable=False)
     
     state_id = Column(Integer, ForeignKey("states.id", ondelete="CASCADE"), nullable=False)
     plane_id = Column(Integer, ForeignKey("planes.id", ondelete="CASCADE"), nullable=False)
