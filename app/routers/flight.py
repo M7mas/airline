@@ -64,7 +64,7 @@ def get_flight(db: Session = Depends(get_db), uFrom: Optional[str] = "", uTo: Op
     
     if flag:
         
-        flight = db.query(models.Flight).filter(models.Flight.source_city.contains(uFrom)).filter(models.Flight.source_city.contains(uTo)).all()
+        flight = db.query(models.Flight).filter(models.Flight.source_city.contains(uFrom)).filter(models.Flight.destination_city.contains(uTo)).all()
         if not flight:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no flight registed.")
         
