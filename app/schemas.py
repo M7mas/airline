@@ -282,10 +282,10 @@ class FlightRES(Model):
     id: int
     source_city: str
     destination_city: str
-    tdate: date = Field(alias="Travel Date")
-    adate: date = Field(alias="Arrival Date")
-    ttime: time = Field(alias="Travel Time")
-    atime: time = Field(alias="Arrival Time")
+    tdate: date = Field(alias="Travel_Date")
+    adate: date = Field(alias="Arrival_Date")
+    ttime: time = Field(alias="Travel_Time")
+    atime: time = Field(alias="Arrival_Time")
     state: StateRES
     plane: PlaneRES
 
