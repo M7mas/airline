@@ -73,7 +73,7 @@ def get_percantage(date: date, db: Session = Depends(get_db), current_user: int 
     if flag:
         lDict = list() # list of dictionaries for the return.
         
-        flights = db.query(models.Flight).filter(models.Flight.date == date).all()
+        flights = db.query(models.Flight).filter(models.Flight.tdate == date).all()
         if not flights:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no flight on {date}.")
         
@@ -164,7 +164,7 @@ def get_order(date: date, db: Session = Depends(get_db), current_user: int = Dep
     if flag:
         lDict = list()
         
-        flights = db.query(models.Flight).filter(models.Flight.date == date).all()
+        flights = db.query(models.Flight).filter(models.Flight.tdate == date).all()
         if not flights:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"There is no flight on {date}.")
         
